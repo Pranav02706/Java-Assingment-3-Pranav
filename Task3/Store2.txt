@@ -1,0 +1,2 @@
+Store 2 Sales: 15000
+Store 2 Profit: 3000
