@@ -1,0 +1,77 @@
+Explain the race condition step by step using two threads
+
+Thread 1                 Thread 2
+   |                        |
+Check seat available        |
+   |                        |
+   |                 Check seat available
+   |                        |
+Book the seat               |
+   |                        |
+   |                 Book the same seat
+   |                        |
+Both may count a booking
+
+Exact critical section :
+if (!booked[seat]) {
+    booked[seat] = true;
+    bookingsMade++;
+}
+
+Compare locking the whole method with locking only the critical section :
+
+Synchronized method	                                        Synchronized block
+
+Locks the entire method	                                    Locks only the specified section
+Simple to implement	                                        More flexible
+Other synchronized operations on the same object may wait	Non-critical work can run outside the lock
+Suitable for short methods	                                Useful when methods contain lengthy non-critical work
+
+1. AtomicBoolean approach :
+
+import java.util.concurrent.atomic.AtomicBoolean;
+public class AtomicBooking {
+    public static void main(String[] args) {
+        AtomicBoolean[] seats = new AtomicBoolean[10];
+        for (int i = 0; i < 10; i++) {
+            seats[i] = new AtomicBoolean(false);
+        }
+        if (seats[0].compareAndSet(false, true)) {
+            System.out.println("Seat booked");
+        } else {
+            System.out.println("Seat already booked");
+        }
+    }
+}
+
+2. ReentrantLock approach :
+
+import java.util.concurrent.locks.ReentrantLock;
+ReentrantLock lock = new ReentrantLock();
+lock.lock();
+try {
+    // Check and book the seat
+} finally {
+    lock.unlock();
+}
+
+3. ConcurrentHashMap approach :
+
+import java.util.concurrent.*;
+ConcurrentHashMap<Integer, String> seats =
+    new ConcurrentHashMap<>();
+String result = seats.putIfAbsent(1, "Booked");
+if (result == null) {
+    System.out.println("Seat booked");
+} else {
+    System.out.println("Seat already booked");
+}
+
+Time and Space Complexity :
+
+Approach	            Average booking operation	            Additional space
+
+Synchronized	        O(1) excluding lock waiting	                O(s)
+AtomicBoolean	                O(1)	                            O(s)
+ReentrantLock	        O(1) excluding lock waiting	                O(s)
+ConcurrentHashMap	        Average O(1)	                        O(s)
