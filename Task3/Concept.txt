@@ -1,0 +1,26 @@
+Design and Correctness :
+
+1. Identify every resource opened by the program and where it must be closed.
+- BufferedReader is used to read each store file.
+- The reader must be closed after reading.
+- The Scanner is used for keyboard input and is closed at the end of main().
+
+2. Why can the manual version leak a resource when an exception occurs?
+In manual resource management, the programmer must explicitly call close(). If an exception occurs before that statement, the closing operation may never execute.
+A finally block helps ensure that the resource is closed even when an exception occurs.
+
+3. How does try-with-resources guarantee closing?
+Try-with-resources automatically closes resources declared inside its parentheses when the try block finishes, whether normally or because of an exception.
+When multiple resources are declared, they are closed in reverse order of initialization.
+
+4. What is a suppressed exception?
+A suppressed exception occurs when an exception is thrown while another exception is already being handled during resource closing.
+For example, reading a file may fail, and closing that same file may also fail. The original reading exception remains the primary exception, while the closing exception is recorded as a suppressed exception.
+
+Time and Space Complexity :
+
+Approach	                            Time complexity	            Maximum simultaneously open handles
+Try-with-resources, one file at a time	    O(n)	                            O(1)
+Manual close in finally,                    O(n)	                            O(1)
+one file at a time	
+No closing	                            O(n) for reading	                Can grow to O(f)
