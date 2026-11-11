@@ -1,0 +1,16 @@
+Feature	                Exception handling	                    Error-code approach
+
+Error detection	        Uses try-catch	                        Uses validation
+Code readability	    Separates normal and error flow	        Requires multiple checks
+Invalid input	        Exception is thrown	                    Input is checked in advance
+Debugging	            Provides stack trace	                Requires manual error tracking
+Performance	            Throwing exceptions has overhead	    Avoids exception creation
+Best use	            Unexpected failures	                    Expected validation failures
+
+Time complexity:
+- Input validation: \(O(1)\) for a fixed number of inputs.
+- Exception handling: Normal execution is generally \(O(1)\) here; throwing an exception adds stack-trace and handling overhead.
+
+Space complexity:
+- Both approaches use \(O(1)\) additional application data space for this fixed-size program.
+- Exception handling requires additional memory for exception objects and stack-trace information when an exception is created.
