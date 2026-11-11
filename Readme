@@ -1,0 +1,25 @@
+Name : Pranav S
+Reg No. : 192472063
+
+Conclusion :
+
+Question 1 – ATM Exception Handling:
+The ATM simulation successfully demonstrates exception handling using try, catch and finally blocks. It handles invalid inputs, insufficient balance and file errors effectively.
+
+Question 2 – User-Defined Exceptions:
+The examination portal demonstrates custom exception creation, inheritance, propagation and exception chaining. It helps identify and handle application-specific errors.
+
+Question 3 – Resource Management:
+The sales report program demonstrates manual resource closing and try-with-resources. It shows how automatic resource management prevents resource leaks and improves code reliability.
+
+Question 4 – Thread Creation and Life Cycle:
+The scanner station program demonstrates multithreading using Thread and Runnable. It explains thread creation, execution, synchronization of completion using join(), and thread life-cycle states.
+
+Question 5 – Race Conditions and Synchronization:
+The cinema booking system demonstrates race conditions and the importance of synchronization. Synchronized methods and blocks prevent multiple users from booking the same seat.
+
+Question 6 – Deadlock and Inter-Thread Communication:
+The program demonstrates deadlock prevention through consistent lock ordering and producer-consumer communication using wait() and notifyAll(). It ensures safe coordination between multiple threads.
+
+Question 7 – Concurrent and Fault-Tolerant Processing:
+The score-processing system demonstrates concurrent file processing using ExecutorService, Callable, Future and concurrent collections. It handles missing and corrupted files while generating accurate processing summaries.
