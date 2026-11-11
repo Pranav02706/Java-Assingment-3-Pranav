@@ -1,0 +1,51 @@
+Explanation for the Output:
+- answer01.pdf is saved because its size is within the 500 KB limit.
+- answer02.pdf exceeds the limit.
+- An IOException is generated.
+- The storage layer wraps it inside SubmissionStorageException.
+- The controller catches the parent ExamException and displays the error and original cause.
+
+
+Explain why each exception is checked or unchecked.
+- ExamException is checked because it extends Exception. The compiler requires it to be handled or declared.
+- SubmissionStorageException is also checked because it extends ExamException.
+- IOException is checked because file and storage failures should be handled explicitly.
+- Unchecked exceptions are appropriate for programming errors or invalid operations that callers are not always required to catch.
+
+
+propagation path of an exception :
+
+Storage Layer
+     |
+     | IOException occurs
+     |
+     v
+Catch IOException
+     |
+     | Wrap original exception
+     |
+     v
+SubmissionStorageException
+     |
+     | Propagates using throws
+     |
+     v
+Controller (main method)
+     |
+     | Catch ExamException
+     |
+     v
+Display error message and cause
+
+
+Explain where the exception is finally handled and what message the student sees.
+
+The exception is finally handled in the main() method, which represents the controller layer. It catches ExamException and displays:
+Error: Could not store answer02.pdf
+Cause: Disk quota exceeded
+
+Time and Space Complexity :
+Operation	                    Time complexity	                                    Space complexity
+Creating an exception	        Depends on stack-trace capture;	                    Proportional to captured stack depth
+Throwing an exception	        Includes stack unwinding and handling overhead	    Uses exception and stack-trace information
+Exception chaining	            Additional cause reference	                        Additional reference and retained cause object
