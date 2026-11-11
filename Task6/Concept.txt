@@ -1,0 +1,117 @@
+Difference between sleep() and wait() :
+
+sleep()	                                    wait()
+Method of Thread class	                    Method of Object class
+Pauses a thread for a specified time	    Waits for notification or another wake-up condition
+Does not release an owned monitor lock	    Releases the object's monitor lock
+Can be called without synchronization	    Must own the object's monitor
+Used for timed pauses	                    Used for inter-thread communication
+
+Student B – Deadlock Analysis and Prevention :
+Construct a pair of transfers that can deadlock.
+
+Consider two wallet accounts, A and B.
+- Thread 1 locks wallet A and waits for wallet B.
+- Thread 2 locks wallet B and waits for wallet A.
+Neither thread can continue because each is waiting for a lock held by the other.
+
+Thread 1                 Thread 2
+   |                        |
+Lock Wallet A               |
+   |                    Lock Wallet B
+   |                        |
+Wait for Wallet B       Wait for Wallet A
+   |                        |
+   -------- Deadlock -------- 
+
+Four conditions for Deadlock :
+Condition	                Explanation
+
+Mutual exclusion	        Only one thread can hold a particular lock at a time
+Hold and wait	            A thread holds one lock while waiting for another
+No preemption	            A lock cannot be forcibly taken away from its owner
+Circular wait	            Threads form a circular chain of lock dependencies
+
+Alternative Concept and Complexity Analysis :
+1. Replace wait() and notifyAll() with ArrayBlockingQueue
+
+import java.util.concurrent.*;
+public class TokenQueue {
+    public static void main(String[] args)
+            throws InterruptedException {
+
+        ArrayBlockingQueue<Integer> queue =
+            new ArrayBlockingQueue<>(5);
+
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 20; i++) {
+                    queue.put(i);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+        int[] collected = new int[2];
+
+        Thread[] consumers = new Thread[2];
+
+        for (int i = 0; i < 2; i++) {
+            final int id = i;
+
+            consumers[i] = new Thread(() -> {
+                try {
+                    for (int j = 0; j < 10; j++) {
+                        collected[id] += queue.take();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
+        producer.start();
+        for (Thread t : consumers) {
+            t.start();
+        }
+
+        producer.join();
+
+        for (Thread t : consumers) {
+            t.join();
+        }
+
+        System.out.println(
+            "Sum of tokens collected: "
+            + (collected[0] + collected[1])
+        );
+    }
+}
+
+
+2. Replace lock ordering with tryLock() and timeout :
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+ReentrantLock lock = new ReentrantLock();
+
+try {
+    if (lock.tryLock(2, TimeUnit.SECONDS)) {
+        try {
+            System.out.println("Lock acquired");
+        } finally {
+            lock.unlock();
+        }
+    } else {
+        System.out.println("Lock unavailable");
+    }
+} catch (InterruptedException e) {
+    Thread.currentThread().interrupt();
+}
+
+Time and Space Complexity :
+
+Operation	            Time complexity	                Space complexity
+Producer put()	        O(1) excluding waiting	        O(c) buffer
+Consumer take()	        O(1) excluding waiting	        O(c) buffer
+Processing all tokens	    O(n)	                    O(c) buffer
+Wallet transfer	        O(1) excluding lock waiting	    O(1) per transfer
