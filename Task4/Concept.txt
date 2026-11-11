@@ -1,0 +1,43 @@
+Difference between extending Thread and implementing Runnable.
+
+Extending Thread	                    Implementing Runnable
+
+Inherits the Thread class	            Implements Runnable interface
+Overrides run()	                        Implements run()
+Cannot extend another class	            Can extend another class
+Task and thread are combined	        Task and thread are separate
+Suitable for simple examples	        Preferred for reusable tasks
+
+Thread life-cycle state diagram :
+
+          NEW
+           |
+         start()
+           |
+       RUNNABLE
+           |
+    Scheduler selects
+           |
+        RUNNING
+        /     \
+       /       \
+   sleep()    run() ends
+     |           |
+  TIMED_WAITING  TERMINATED
+     |
+  Time expires
+     |
+  RUNNABLE
+
+Other possible states:
+BLOCKED – waiting to acquire a monitor lock
+WAITING – waiting for another thread's action
+
+Time and Space Complexity
+
+Approach	                        Time	                                Thread memory
+
+Creating threads manually	Approximately O(n/p) processing batches,        O(p) thread stacks
+                            plus scheduling overhead	
+Fixed thread pool	        Approximately O(n/p) processing batches,        O(p) thread stacks
+                            plus task scheduling overhead	
